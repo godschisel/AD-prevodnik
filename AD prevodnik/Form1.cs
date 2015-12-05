@@ -21,7 +21,7 @@ namespace AD_prevodnik
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Task analogInTask = new Task();
+            Task analogInTask = new Task(); 
             AIChannel myAIChannel;
 
             myAIChannel = analogInTask.AIChannels.CreateVoltageChannel(
