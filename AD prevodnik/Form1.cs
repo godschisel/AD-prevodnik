@@ -14,6 +14,65 @@ namespace AD_prevodnik
 {
     public partial class Form1 : Form
     {
+
+        private Task UlohaVstup = null;            //DAQmx premenne
+        private Task UlohaVystup = null;
+        private Task UlohaCounter = null;
+        private AIChannel AICh;
+        private AOChannel AOCh;
+        private CIChannel CICh;
+        private AnalogSingleChannelReader Citac;
+        private AnalogSingleChannelWriter Pisac;
+        private CounterReader Counter;
+
+        private void button3_Click(object sender, EventArgs e)   // Digital Read
+        {
+
+
+
+            // DigitalSingleChannelReader myDigitalReader;
+
+            // myTask.DIChannels.CreateChannel();
+
+            DigitalSingleChannelReader myDigitalReader;
+            Task digitalInTask = new Task();
+
+            DIChannel myDIChannel;
+
+            myDIChannel = digitalInTask.DIChannels.CreateChannel(
+                "Dev1/port0/line0:7",    //what????  potrebujem pre PFI 0
+                 "myChannel",
+                 ChannelLineGrouping.OneChannelForAllLines
+                );
+
+            myDigitalReader = new DigitalSingleChannelReader(digitalInTask.Stream);
+
+            bool[] vysl = myDigitalReader.ReadSingleSampleMultiLine();
+
+
+            int val = 0;
+            for (int i = 0; i < vysl.Length; i++)
+            {
+                if (vysl[i])
+                {   //if bit is true
+                    //add decimal value of bit
+                    val += 1 << i;
+                }
+            }
+
+            //display read value in hex
+            textBox3.Text = String.Format("0x{0:X}", val);
+
+
+            //textBox3.Text = Convert.ToString(vysl[1]);
+        }
+
+        private void button4_Click(object sender, EventArgs e) // Digital Write
+        {
+
+        }
+
+
         public Form1()
         {
             InitializeComponent();
@@ -24,10 +83,14 @@ namespace AD_prevodnik
             textBox1.Text = analogReadData();
         }
 
+
+
         private void button2_Click(object sender, EventArgs e)        // Write Data
         {
             analogWriteData(textBox2.Text);
         }
+
+
 
         string analogReadData()
         {
@@ -88,8 +151,32 @@ namespace AD_prevodnik
             }
             writer.WriteSingleSample(true, analogDataOut);
         }
+
+        
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
